@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <title>BPM - הזנת מדידות</title>
+    <link rel="stylesheet" href="css.css">
+</head>
+<body>
+<header>
+    BPM <span class="heart">❤️</span>
+</header>
+<nav>
+    <a href="/">סקירת משתמשים</a>
+    <a href="/page2">היסטוריית מדידות</a>
+    <a href="/page3">הזן מדידות</a>
+    <a href="/page4">עדכון משתמשים</a>
+</nav>
+<div class="container">
+    <h2>הזן מדידות</h2>
+    <form>
+        <div class="form-group">
+            <label for="user">בחר משתמש:</label>
+            <select id="user" name="user">
+                <option value="">-- בחר משתמש --</option>
+                <!-- אפשרויות משתמש -->
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="measurement-date">תאריך המדידה:</label>
+            <input type="date" id="measurement-date" name="measurement-date">
+        </div>
+        <div class="form-group">
+            <label for="low-saturation">סיטורציה נמוכה</label>
+            <input type="number" id="low-saturation" name="low-saturation" placeholder="הכנס ערך">
+        </div>
+        <div class="form-group">
+            <label for="high-saturation">סיטורציה גבוהה</label>
+            <input type="number" id="high-saturation" name="high-saturation" placeholder="הכנס ערך">
+        </div>
+        <div class="form-group">
+            <label for="pulse">דופק</label>
+            <input type="number" id="pulse" name="pulse" placeholder="הכנס ערך">
+        </div>
+        <button type="submit">הזן מדידה</button>
+    </form>
+</div>
+</body>
+</html>
