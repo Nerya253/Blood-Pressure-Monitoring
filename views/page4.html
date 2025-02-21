@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <title>BPM - הוסף או מחק משתמש</title>
+    <script src="./script.js" defer></script>
+    <link rel="stylesheet" href="css.css">
+
+</head>
+<body>
+<header>
+    BPM <span class="heart">❤️</span>
+</header>
+<nav>
+    <a href="/">סקירת משתמשים</a>
+    <a href="/page2">היסטוריית מדידות</a>
+    <a href="/page3">הזן מדידות</a>
+    <a href="/page4">עדכון משתמשים</a>
+</nav>
+<div class="container">
+    <div class="card">
+        <h2>הוסף משתמש חדש</h2>
+        <form id="createUserForm">
+            <div class="form-group">
+                <label for="new-user-name">שם משתמש:</label>
+                <input type="text" id="new-user-name" name="new-user-name" placeholder="הכנס שם מלא" required>
+            </div>
+            <button type="submit">הוסף משתמש</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2>מחק משתמש קיים</h2>
+        <form id="deleteUserForm">
+            <div class="form-group">
+                <label for="user-select">בחר משתמש למחיקה:</label>
+                <select id="user-select" name="user-select" required>
+                    <option value="" disabled selected>בחר משתמש</option>
+                </select>
+            </div>
+            <button type="submit">מחק משתמש</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

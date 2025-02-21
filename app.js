@@ -26,8 +26,8 @@ app.get('/page4', (req, res) => {
     res.status(200).sendFile(path.join(__dirname, "views" ,"page4.html"));
 });
 
-const showUsers_R = require('./Routers/user_R');
-app.use('/Users', showUsers_R);
+const user_R = require('./Routers/user_R');
+app.use('/users', user_R);
 
 
 app.listen(port, () => {
