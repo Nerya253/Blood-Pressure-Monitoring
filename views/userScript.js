@@ -1,3 +1,12 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const selectElement = document.querySelector(".user-select");
+    if (selectElement) {
+        usersSelect();
+    } else {
+        console.error("Element with class 'user-select' not found.");
+    }
+});
+
 document.querySelector('#createUserForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -48,7 +57,7 @@ async function usersSelect() {
             s += `<option value="${user.id}">${user.full_name}</option>`;
         }
 
-        document.getElementById("user-select").innerHTML = s;
+        document.querySelector(".user-select").innerHTML = s;
 
     } catch (error) {
         console.error("Error fetching users:", error);
@@ -58,7 +67,7 @@ async function usersSelect() {
 
 //מחיקת משתמש
 async function deleteUser() {
-    const userId = document.getElementById("user-select").value;
+    const userId = document.querySelector(".user-select").value;
 
     if (!userId) {
         alert("בחר משתמש למחיקה");
@@ -80,4 +89,7 @@ async function deleteUser() {
     }
 }
 
-usersSelect();
+
+
+
+

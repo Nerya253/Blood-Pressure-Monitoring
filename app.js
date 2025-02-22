@@ -29,6 +29,9 @@ app.get('/page4', (req, res) => {
 const user_R = require('./Routers/user_R');
 app.use('/users', user_R);
 
+const madadim_R = require('./Routers/madadim_R');
+app.use('/madadim', madadim_R);
+
 
 app.listen(port, () => {
     console.log(`Now listening on port http://localhost:${port}`);

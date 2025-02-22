@@ -1,11 +1,10 @@
 const express = require('express');
-const UserRouter = express.Router();
+const madadimRouter = express.Router();
 
-module.exports = UserRouter;
-const user_M = require("../Middleware/user_M")
+module.exports = madadimRouter;
+const madadim_M = require("../Middleware/madadim_M")
 
-
-UserRouter.post("/createUser", user_M.createUser, (req, res) => {//Create - הוספה
+madadimRouter.post("/createMadadim", madadim_M.createMadadim, (req, res) => {//Create - הוספה
     if (req.success) {
         res.status(200).json({success: req.success, insertId: req.insertId})
     } else {
@@ -13,7 +12,7 @@ UserRouter.post("/createUser", user_M.createUser, (req, res) => {//Create - הו
     }
 })
 
-UserRouter.get("/getUsers", user_M.getUsers, (req, res) => {//Read - קבלת רשימה
+madadimRouter.get("/getMadadim", madadim_M.getMadadim, (req, res) => {//Read - קבלת רשימה
     if (req.success) {
         res.status(200).send({success: req.success, users: req.users})
     } else {
@@ -21,7 +20,7 @@ UserRouter.get("/getUsers", user_M.getUsers, (req, res) => {//Read - קבלת ר
     }
 })
 
-UserRouter.put("/updateUser", user_M.updateUser, (req, res) => {//Update - עריכה
+madadimRouter.put("/updateMadadim", madadim_M.updateMadadim, (req, res) => {//Update - עריכה
     if (req.success) {
         res.status(200).send({success: req.success})
     } else {
@@ -29,7 +28,7 @@ UserRouter.put("/updateUser", user_M.updateUser, (req, res) => {//Update - ער�
     }
 })
 
-UserRouter.delete("/deleteUser", user_M.deleteUser, (req, res) => {// Delete - מחיקה
+madadimRouter.delete("/deleteMadadim", madadim_M.deleteMadadim, (req, res) => {// Delete - מחיקה
     if (req.success) {
         res.status(200).send({success: req.success})
     } else {
