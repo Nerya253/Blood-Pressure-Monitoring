@@ -93,12 +93,12 @@ form input, form select {
     border: none;
     border-radius: 8px;
     outline: none;
-    background: rgba(255,255,255,0.2);
+    background: #203a43;
     color: var(--text);
     font-size: 1em;
 }
 form input::placeholder {
-    color: rgba(255,255,255,0.7);
+    background: #203a43;
 }
 button {
     padding: 12px 25px;
@@ -115,3 +115,24 @@ button:hover {
     background: var(--navlink-hover);
     transform: scale(1.05);
 }
+
+form select {
+    color: white; /* צבע שחור */
+    background: #203a43;
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    outline: none;
+    font-size: 1em;
+}
+/*form select {*/
+/*    background: ; !* צבע רקע של הרשימה שנפתחת *!*/
+/*    color: #000; !* צבע הכתב *!*/
+/*    border: none;*/
+/*    border-radius: 8px;*/
+/*    padding: 12px;*/
+/*    font-size: 1em;*/
+/*    outline: none;*/
+/*    appearance: none; !* מסיר את סגנון ברירת המחדל *!*/
+/*}*/

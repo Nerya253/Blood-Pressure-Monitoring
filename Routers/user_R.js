@@ -14,7 +14,7 @@ UserRouter.post("/createUser", user_M.createUser, (req, res) => {//Create - הו
 
 UserRouter.get("/getUsers", user_M.getUsers, (req, res) => {//Read - קבלת רשימה
     if (req.success) {
-        res.status(200).send({success: req.success, students: req.students})
+        res.status(200).send({success: req.success, users: req.users})
     } else {
         res.status(500).send({success: req.success})
     }

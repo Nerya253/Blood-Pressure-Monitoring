@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>BPM - הוסף או מחק משתמש</title>
-    <script src="./script.js" defer></script>
     <link rel="stylesheet" href="css.css">
 
 </head>
@@ -35,13 +34,13 @@
             <div class="form-group">
                 <label for="user-select">בחר משתמש למחיקה:</label>
                 <select id="user-select" name="user-select" required>
-                    <option value="" disabled selected>בחר משתמש</option>
                 </select>
             </div>
-            <button type="submit">מחק משתמש</button>
+            <button type="submit" onclick="deleteUser()">מחק משתמש</button>
         </form>
     </div>
 </div>
+<script src="./script.js"></script>
 
 </body>
 </html>
