@@ -2,13 +2,12 @@ const db_pool = require("../database");
 
 async function createUser(req, res, next) {
     const full_name = req.body["new-user-name"];
-
     try {
         const promisePool = db_pool.promise();
         const sqlQuery1 = `INSERT INTO users (full_name)
                            VALUES (?)`;
         const [result] = await promisePool.query(sqlQuery1, [full_name]);
-        req.lastInsertId = result.lastInsertId;
+        req.insertId = result.insertId;
         req.success = true;
     } catch (error) {
         console.error("Error in createUser:", error);

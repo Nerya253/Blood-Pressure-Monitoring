@@ -6,7 +6,7 @@ const user_M = require("../Middleware/user_M")
 
 UserRouter.post("/createUser", user_M.createUser, (req, res) => {//Create - הוספה
     if (req.success) {
-        res.status(200).json({success: req.success, lastInsertId: req.lastInsertId})
+        res.status(200).json({success: req.success, insertId: req.insertId})
     } else {
         res.status(500).send({success: req.success})
     }
