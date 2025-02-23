@@ -23,6 +23,7 @@ document.querySelector('#createUserForm').addEventListener('submit', async (e) =
         if (response.ok) {
             alert('המשתמש נוצר בהצלחה!');
             form.reset();
+            await usersSelect();
         } else {
             alert('שגיאה ביצירת המשתמש');
         }
