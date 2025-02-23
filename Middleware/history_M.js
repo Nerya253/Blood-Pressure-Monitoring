@@ -1,9 +1,6 @@
 const db_pool = require("../database");
 
-// historyRouter.post('/getMonthlySummary',  (req, res, next) => {
-
 async function getMonthlySummary(req, res, next) {
-    let rows = [];
     try {
         const promisePool = db_pool.promise();
         const sqlQuery = `
@@ -14,25 +11,17 @@ async function getMonthlySummary(req, res, next) {
             FROM users u
                      JOIN b_m b ON u.id = b.user_id
             GROUP BY u.id, u.full_name`;
-        [rows] = await promisePool.query(sqlQuery);
 
-        db_pool.query(sqlQuery, (err, results) => {
-            if (err) {
-                console.error('Error fetching user monthly summary:', err);
-                return res.status(500).send('Error fetching data');
-            }
-            res.json(results);
-        });
-        req.avg = rows;
-    }
-    catch (error) {
+        const [rows] = await promisePool.query(sqlQuery);
+
+        res.json(rows);
+
+    } catch (error) {
         console.error('Error processing request:', error);
         res.status(500).send('Internal server error');
     }
 }
 
-
-
 module.exports = {
     getMonthlySummary
-}
+};
