@@ -32,6 +32,9 @@ app.use('/users', user_R);
 const madadim_R = require('./Routers/madadim_R');
 app.use('/madadim', madadim_R);
 
+const history_R = require('./Routers/history_R');
+app.use('/history', history_R);
+
 
 app.listen(port, () => {
     console.log(`Now listening on port http://localhost:${port}`);

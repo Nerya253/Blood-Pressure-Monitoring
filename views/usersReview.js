@@ -1,4 +1,5 @@
 let all_users = [];
+let all_avg = [];
 
 async function GetUsers() {
     try {
@@ -15,10 +16,33 @@ async function GetUsers() {
         }
 
         const reply = await response.json();
-        console.log("Reply from server:", reply);
 
         all_users = reply.users || reply.data || [];
-        console.log("Parsed Users:", all_users);
+
+        CreateTableHeader();
+        CreateTableBody();
+    } catch (error) {
+        console.error("Error fetching users:", error);
+    }
+}
+
+async function GetAvg() {
+    try {
+        const url = "http://localhost:3000/history/getMonthlySummary";
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const reply = await response.json();
+
+        all_avg = reply;
 
         CreateTableHeader();
         CreateTableBody();
@@ -34,54 +58,38 @@ function CreateTableHeader() {
     s += "<th>סטורציה נמוכה</th>";
     s += "<th>סטורציה גבוהה</th>";
     s += "<th>דופק</th>";
-    s += "<th>עריכה</th>";
-    s += "<th>מחיקה</th>";
+    s += "<th>כמות מדידיות חריגות</th>";
     s += "</tr>";
     document.getElementById("mainHeader").innerHTML = s;
 }
 
 function CreateTableBody() {
     let s = "";
+
     for (let user of all_users) {
-        s += "<tr>";
-        s += `<td>${user.full_name}</td>`;
-        s += `<td>${user.low_saturation}</td>`;
-        s += `<td>${user.high_saturation}</td>`;
-        s += `<td>${user.pulse}</td>`;
-        s += `<td><button onclick="editUser(${user.id})">ערוך</button></td>`;
-        s += `<td><button onclick="deleteUser(${user.id})">מחק</button></td>`;
-        s += "</tr>";
+
+        let avg = null;
+        for (let i = 0; i < all_avg.length; i++) {
+            if (all_avg[i].full_name === user.full_name) {
+                avg = all_avg[i];
+                break;
+            }
+        }
+
+        if (avg) {
+            s += "<tr>";
+            s += `<td>${user.full_name}</td>`;
+            s += `<td>${avg.low_saturation_avg}</td>`;
+            s += `<td>${avg.high_saturation_avg}</td>`;
+            s += `<td>${avg.pulse_avg}</td>`;
+            s += `<td>${avg.abnormal_measurements_count || 0}</td>`;
+            s += "</tr>";
+        }
     }
+
+    // הצג את הנתונים בטבלה
     document.getElementById("mainTableData").innerHTML = s;
 }
 
-function editUser(userId) {
-    alert(`עריכת משתמש ${userId} לא ממומשת עדיין.`);
-    // כאן תוכל להוסיף קוד לעריכת משתמש
-}
-
-async function deleteUser(userId) {
-    if (!confirm("האם אתה בטוח שברצונך למחוק משתמש זה?")) return;
-
-    try {
-        const response = await fetch(`http://localhost:3000/Users/deleteUser`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id: userId }),
-        });
-
-        if (response.ok) {
-            alert("המשתמש נמחק בהצלחה.");
-            GetUsers(); // רענון הטבלה לאחר מחיקה
-        } else {
-            alert("שגיאה במחיקת המשתמש.");
-        }
-    } catch (error) {
-        console.error("Error deleting user:", error);
-        alert("שגיאה בחיבור לשרת.");
-    }
-}
-
 document.addEventListener("DOMContentLoaded", GetUsers);
+document.addEventListener("DOMContentLoaded", GetAvg);
