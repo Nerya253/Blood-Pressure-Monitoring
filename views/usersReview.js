@@ -87,7 +87,6 @@ function CreateTableBody() {
         }
     }
 
-    // הצג את הנתונים בטבלה
     document.getElementById("mainTableData").innerHTML = s;
 }
 
