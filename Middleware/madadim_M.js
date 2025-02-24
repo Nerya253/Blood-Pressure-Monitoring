@@ -25,14 +25,14 @@ async function createMadadim(req, res, next) {
 
 async function getMadadim(req, res, next) {
     const sqlQuery = `SELECT *
-                      FROM users`;
+                      FROM b_m`;
     let rows = [];
 
     try {
         const promisePool = db_pool.promise();
         [rows] = await promisePool.query(sqlQuery);
         req.success = true;
-        req.users = rows;
+        req.madadim = rows;
     } catch (err) {
         req.success = false;
         console.log(err);
@@ -42,12 +42,17 @@ async function getMadadim(req, res, next) {
 }
 
 async function updateMadadim(req, res, next) {
-    let id = req.body.id;
-    const newName = req.body.full_name;
+    let madad_id = req.body.id;
+    const high = req.body.high;
+    const low = req.body.low;
+    const pulse = req.body.pulse;
 
-    let sqlQuery = `UPDATE users `
-    sqlQuery += `SET full_name = '${newName}' `
-    sqlQuery += `WHERE id = ${id}`;
+    let sqlQuery = `UPDATE b_m `
+    sqlQuery += `SET high = '${high}', `
+    sqlQuery += ` low = '${low}', `
+    sqlQuery += `pulse = '${pulse}' `
+    sqlQuery += `WHERE id = ${madad_id}`;
+
     let rows = [];
     try {
         const promisePool = db_pool.promise();
@@ -61,17 +66,13 @@ async function updateMadadim(req, res, next) {
 }
 
 async function deleteMadadim(req, res, next) {
-    let id = req.body.id;
+    let madad_id = req.body.id;
     let rows = [];
 
     try {
         const promisePool = db_pool.promise();
-
-        const sqlDeleteFromBM = `DELETE FROM b_m WHERE user_id = ?`;
-        await promisePool.query(sqlDeleteFromBM, [id]);
-
-        const sqlDeleteUser = `DELETE FROM users WHERE id = ?`;
-        [rows] = await promisePool.query(sqlDeleteUser, [id]);
+        const sqlQuery = `DELETE FROM b_m WHERE id = ?`;
+        [rows] = await promisePool.query(sqlQuery, [madad_id]);
 
         req.success = true;
     } catch (err) {

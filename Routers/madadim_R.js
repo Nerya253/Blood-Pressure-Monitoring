@@ -14,7 +14,7 @@ madadimRouter.post("/createMadadim", madadim_M.createMadadim, (req, res) => {//C
 
 madadimRouter.get("/getMadadim", madadim_M.getMadadim, (req, res) => {//Read - קבלת רשימה
     if (req.success) {
-        res.status(200).send({success: req.success, users: req.users})
+        res.status(200).send({success: req.success, madadim: req.madadim})
     } else {
         res.status(500).send({success: req.success})
     }
