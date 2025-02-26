@@ -1,14 +1,46 @@
-let all_users = [];
-let all_avg = [];
+document.addEventListener("DOMContentLoaded", async () => {
+    await fetchYears();
+
+    document.getElementById("monthSelect").addEventListener("change", () => {
+        GetUsers();
+        GetAvg();
+        GetCount();
+    });
+
+    document.getElementById("yearSelect").addEventListener("change", async (event) => {
+        const year = event.target.value;
+        await fetchMonth(year);
+
+        GetUsers();
+        GetAvg();
+        GetCount();
+    });
+
+    const initialYear = document.getElementById("yearSelect").value;
+    if (initialYear) {
+        await fetchMonth(initialYear);
+        GetUsers();
+        GetAvg();
+        GetCount();
+    }
+});
+
+let all_users = null;
+let all_avg = null;
+let count = null;
 
 async function GetUsers() {
+    const month = document.getElementById("monthSelect").value;
+    const year = document.getElementById("yearSelect").value;
+
     try {
-        const url = "http://localhost:3000/Users/getUsers";
+        const url = "http://localhost:3000/review/getUsers";
         const response = await fetch(url, {
-            method: "GET",
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
+            body: JSON.stringify({ month: month, year: year }),
         });
 
         if (!response.ok) {
@@ -16,8 +48,7 @@ async function GetUsers() {
         }
 
         const reply = await response.json();
-
-        all_users = reply.users || reply.data || [];
+        all_users = reply.users || [];
 
         CreateTableHeader();
         CreateTableBody();
@@ -26,14 +57,20 @@ async function GetUsers() {
     }
 }
 
+
+
 async function GetAvg() {
+    const month = document.getElementById("monthSelect").value;
+    const year = document.getElementById("yearSelect").value;
+
     try {
-        const url = "http://localhost:3000/history/getMonthlySummary";
+        const url = "http://localhost:3000/review/getAvg";
         const response = await fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
+            body: JSON.stringify({ month: month, year: year }),
         });
 
         if (!response.ok) {
@@ -41,14 +78,106 @@ async function GetAvg() {
         }
 
         const reply = await response.json();
-
         all_avg = reply;
 
         CreateTableHeader();
         CreateTableBody();
     } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error("Error fetching averages:", error);
     }
+}
+
+
+
+async function GetCount() {
+    const month = document.getElementById("monthSelect").value;
+    const year = document.getElementById("yearSelect").value;
+
+    try {
+        const url = "http://localhost:3000/review/getcount";
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ month: month, year: year }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const reply = await response.json();
+        count = reply;
+
+        CreateTableHeader();
+        CreateTableBody();
+    } catch (error) {
+        console.error("Error fetching count:", error);
+    }
+}
+
+
+async function fetchYears() {
+    try {
+        const response = await fetch('http://localhost:3000/review/getYears');
+        if (!response.ok) {
+            throw new Error('שגיאה בהבאת השנים');
+        }
+
+        const data = await response.json();
+        YearSelect(data.years);
+    } catch (error) {
+        console.error('שגיאה בחיבור לשרת:', error);
+    }
+}
+
+
+
+function YearSelect(years) {
+    let s = "";
+    years.forEach(year => {
+        s += "<option value='" + year + "'>" + year + "</option>";
+    });
+    document.getElementById('yearSelect').innerHTML = s;
+
+    // אם יש שנה שנבחרה, תבצע את העדכון
+    const initialYear = document.getElementById("yearSelect").value;
+    if (initialYear) {
+        fetchMonth(initialYear);  // טוען את החודשים לפי השנה הנבחרת
+        GetUsers();  // טוען את המשתמשים
+        GetAvg();  // טוען את הממוצעים
+        GetCount();  // טוען את הספירות
+    }
+}
+
+async function fetchMonth(year) {
+    try {
+        const response = await fetch('http://localhost:3000/review/getMonths', {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ year: year })
+        });
+
+        if (!response.ok) {
+            throw new Error('שגיאה בהבאת חודשים');
+        }
+
+        const data = await response.json();
+        monthsSelect(data.months);
+    } catch (error) {
+        console.error('שגיאה בחיבור לשרת:', error);
+    }
+}
+
+function monthsSelect(months) {
+    let s = "";
+    months.forEach(month => {
+        s += "<option value='" + month + "'>" + month + "</option>";
+    });
+    document.getElementById('monthSelect').innerHTML = s;
 }
 
 function CreateTableHeader() {
@@ -58,7 +187,7 @@ function CreateTableHeader() {
     s += "<th>סטורציה נמוכה</th>";
     s += "<th>סטורציה גבוהה</th>";
     s += "<th>דופק</th>";
-    s += "<th>כמות מדידיות חריגות</th>";
+    s += "<th>כמות מדידות חריגות</th>";
     s += "</tr>";
     document.getElementById("mainHeader").innerHTML = s;
 }
@@ -66,29 +195,32 @@ function CreateTableHeader() {
 function CreateTableBody() {
     let s = "";
 
-    for (let user of all_users) {
+    all_users.forEach(user => {
+        let Avg = null;
+        let cnt = null;
 
-        let avg = null;
-        for (let i = 0; i < all_avg.length; i++) {
-            if (all_avg[i].full_name === user.full_name) {
-                avg = all_avg[i];
+        for (let avg of all_avg) {
+            if (avg.userId === user.id) {
+                Avg = avg;
                 break;
             }
         }
 
-        if (avg) {
+        for (let item of count) {
+            if (item.user_id == user.id) {
+                cnt = item;
+                break;
+            }
+        }
+        if (Avg) {
             s += "<tr>";
             s += `<td>${user.full_name}</td>`;
-            s += `<td>${avg.low_saturation_avg}</td>`;
-            s += `<td>${avg.high_saturation_avg}</td>`;
-            s += `<td>${avg.pulse_avg}</td>`;
-            s += `<td>${avg.abnormal_measurements_count || 0}</td>`;
+            s += `<td>${Avg.avgLow}</td>`;
+            s += `<td>${Avg.avgHigh}</td>`;
+            s += `<td>${Avg.avgPulse}</td>`;
+            s += `<td>${cnt ? cnt.Exceptions : 0}</td>`;
             s += "</tr>";
         }
-    }
-
+    });
     document.getElementById("mainTableData").innerHTML = s;
 }
-
-document.addEventListener("DOMContentLoaded", GetUsers);
-document.addEventListener("DOMContentLoaded", GetAvg);

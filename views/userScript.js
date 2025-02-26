@@ -7,33 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-document.querySelector('#createUserForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-
-    try {
-        const response = await fetch('http://localhost:3000/Users/createUser', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
-        });
-
-        if (response.ok) {
-            alert('המשתמש נוצר בהצלחה!');
-            form.reset();
-            await usersSelect();
-        } else {
-            alert('שגיאה ביצירת המשתמש');
-        }
-    } catch (error) {
-        console.error('שגיאה בחיבור לשרת:', error);
-        alert('שגיאה בחיבור לשרת');
-    }
-});
-
-
 
 //הצגת רשימת המשתמשים
 async function usersSelect() {
@@ -66,14 +39,37 @@ async function usersSelect() {
 }
 
 
+async function createUser() {
+    const newUserName = document.getElementById("newUserName").value;
+
+    let url = "http://localhost:3000/Users/createUser";
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ newUserName: newUserName })
+
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }else {
+            document.getElementById("newUserName").value = "";
+        }
+    } catch (error) {
+        console.error("Error fetching users:", error);
+    }
+}
+
+
+
+
+
 //מחיקת משתמש
 async function deleteUser() {
     const userId = document.querySelector(".user-select").value;
-
-    if (!userId) {
-        alert("בחר משתמש למחיקה");
-        return;
-    }
 
     try {
         const response = await fetch("http://localhost:3000/Users/deleteUser", {
@@ -81,7 +77,7 @@ async function deleteUser() {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ id: userId })  // שולח את ה-ID של המשתמש שנבחר למחיקה
+            body: JSON.stringify({ id: userId })
         });
 
     } catch (error) {
@@ -91,6 +87,47 @@ async function deleteUser() {
 }
 
 
+async function updateUser() {
+    const userId = document.querySelector(".user-select").value;
+    const newName  = document.getElementById("newName").value;
 
+    if (!userId || !newName) {
+        alert("יש למלא את כל השדות!");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:3000/Users/updateUser", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ id: userId, newName: newName })
+        });
+
+        if (response.ok) {
+            alert("עודכן בהצלחה!");
+        } else {
+            const errorText = await response.text();
+            console.error("שגיאה מהשרת:", errorText);
+            alert("שגיאה בהוספת המדדים.");
+        }
+
+    } catch (error) {
+        console.error("Error:", error);
+        alert("שגיאה בחיבור לשרת");
+    }
+}
+
+
+
+document.getElementById("deleteButton").addEventListener("click", () => {
+    document.getElementById("newName").disabled = true;
+    document.getElementById("newName").value = "";
+});
+
+document.getElementById("updateButton").addEventListener("click", () => {
+    document.getElementById("newName").disabled = false;
+});
 
 

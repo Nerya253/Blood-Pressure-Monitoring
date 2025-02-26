@@ -1,12 +1,12 @@
 const db_pool = require("../database");
 
 async function createUser(req, res, next) {
-    const full_name = req.body["new-user-name"];
+    const newUserName = req.body.newUserName;
     try {
         const promisePool = db_pool.promise();
         const sqlQuery= `INSERT INTO users (full_name)
                            VALUES (?)`;
-        const [result] = await promisePool.query(sqlQuery, [full_name]);
+        const [result] = await promisePool.query(sqlQuery, [newUserName]);
         req.insertId = result.insertId;
         req.success = true;
     } catch (error) {
@@ -35,16 +35,18 @@ async function getUsers(req, res, next) {
 }
 
 async function updateUser(req, res, next) {
-    let id = req.body.id;
-    const newName = req.body.full_name;
+    console.log(req.body)
 
+    let id = req.body.id;
+    const newName = req.body.newName;
+
+    console.log(id,newName)
     let sqlQuery = `UPDATE users `
     sqlQuery += `SET full_name = '${newName}' `
     sqlQuery += `WHERE id = ${id}`;
-    let rows = [];
     try {
         const promisePool = db_pool.promise();
-        [rows] = await promisePool.query(sqlQuery);
+        await promisePool.query(sqlQuery);
         req.success = true;
     } catch (err) {
         req.success = false;
@@ -55,7 +57,6 @@ async function updateUser(req, res, next) {
 
 async function deleteUser(req, res, next) {
     let id = req.body.id;
-    let rows = [];
 
     try {
         const promisePool = db_pool.promise();
@@ -64,7 +65,7 @@ async function deleteUser(req, res, next) {
         await promisePool.query(sqlDeleteFromBM, [id]);
 
         const sqlDeleteUser = `DELETE FROM users WHERE id = ?`;
-        [rows] = await promisePool.query(sqlDeleteUser, [id]);
+        await promisePool.query(sqlDeleteUser, [id]);
 
         req.success = true;
     } catch (err) {

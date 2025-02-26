@@ -27,21 +27,27 @@
         <h2>הוסף משתמש חדש</h2>
         <form id="createUserForm">
             <div class="form-group">
-                <label for="new-user-name">שם משתמש:</label>
-                <input type="text" id="new-user-name" name="new-user-name" placeholder="הכנס שם מלא" required>
+                <label for="newUserName">שם משתמש:</label>
+                <input type="text" id="newUserName" name="newUserName" placeholder="הכנס שם מלא" required>
             </div>
-            <button type="submit">הוסף משתמש</button>
+            <button onclick="createUser()">הוסף משתמש</button>
         </form>
     </div>
     <div class="card">
-        <h2>מחק משתמש קיים</h2>
+        <h2>עדכן או מחק משתמש קיים</h2>
         <form id="deleteUserForm">
             <div class="form-group">
-                <label>בחר משתמש למחיקה:</label>
-                <select class="user-select" name="user-select" required>
+                <label>בחר משתמש:</label>
+                <select class="user-select" name="id" required>
                 </select>
             </div>
-            <button type="submit" onclick="deleteUser()">מחק משתמש</button>
+            <div class="form-group">
+                <label for="newName">שם חדש לעדכון:</label>
+                <input type="text" id="newName" name="newName" placeholder="הכנס שם חדש" required>
+            </div>
+            <button type="submit" id="updateButton" onclick="updateUser()">עדכן משתמש</button>
+            <button type="submit" id="deleteButton" onclick="deleteUser()">מחק משתמש</button>
+
         </form>
     </div>
 </div>

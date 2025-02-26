@@ -437,3 +437,20 @@ select option:hover {
         background-color: var(--primary);
     }
 }
+
+.abnormal {
+    background-color: #ffcccc;
+    font-weight: bold;
+}
+
+
+
+.field-pair {
+    margin-bottom: 2rem; /* מרווח של 1 רם בין כל זוג */
+}
+
+.field-pair label {
+    display: block;
+    margin-bottom: 0.3rem; /* רווח קטן בין הלייבל לשדה */
+}
+

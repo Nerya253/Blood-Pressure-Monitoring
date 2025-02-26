@@ -19,29 +19,40 @@
     <a href="/">סקירת משתמשים</a>
     <a href="/page2">היסטוריית מדידות</a>
     <a href="/page3">הזן מדידות</a>
-    <a href="/page4">עדכון משתמשים</a>
+        <a href="/page4">עדכון משתמשים</a>
 </nav>
 <div class="container">
     <h2>הזן מדידות</h2>
     <form id="createMadadimForm">
         <div class="form-group">
-            <label>בחר משתמש:</label>
-            <select class="user-select" name="user" required>
-            </select>
+            <div class="field-pair">
+                <label>בחר משתמש:</label>
+                <select class="user-select" name="user" required></select>
+            </div>
+
+            <div class="field-pair">
+                <label for="date">תאריך בדיקה:</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+
+            <div class="fields-row">
+                <div class="field-pair">
+                    <label for="low-saturation">סיטורציה נמוכה:</label>
+                    <input type="number" id="low-saturation" name="low" placeholder="הכנס ערך" required>
+                </div>
+
+                <div class="field-pair">
+                    <label for="high-saturation">סיטורציה גבוהה:</label>
+                    <input type="number" id="high-saturation" name="high" placeholder="הכנס ערך" required>
+                </div>
+
+                <div class="field-pair">
+                    <label for="pulse">דופק:</label>
+                    <input type="number" id="pulse" name="pulse" placeholder="הכנס ערך" required>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="low-saturation">סיטורציה נמוכה</label>
-            <input type="number" id="low-saturation" name="low" placeholder="הכנס ערך" required>
-        </div>
-        <div class="form-group">
-            <label for="high-saturation">סיטורציה גבוהה</label>
-            <input type="number" id="high-saturation" name="high" placeholder="הכנס ערך" required>
-        </div>
-        <div class="form-group">
-            <label for="pulse">דופק</label>
-            <input type="number" id="pulse" name="pulse" placeholder="הכנס ערך" required>
-        </div>
-        <button type="submit">הזן מדידה</button>
+        <button type="submit" onclick="addMadadim()">הזן מדידה</button>
     </form>
 </div>
 <script src="madadimScript.js" defer></script>

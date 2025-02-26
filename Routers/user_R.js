@@ -20,6 +20,13 @@ UserRouter.get("/getUsers", user_M.getUsers, (req, res) => {//Read - קבלת ר
         res.status(500).send({success: req.success})
     }
 })
+UserRouter.post("/getUsers", user_M.getUsers, (req, res) => {//Read - קבלת רשימה
+    if (req.success) {
+        res.status(200).send({success: req.success, users: req.users})
+    } else {
+        res.status(500).send({success: req.success})
+    }
+})
 
 UserRouter.put("/updateUser", user_M.updateUser, (req, res) => {//Update - עריכה
     if (req.success) {
@@ -36,3 +43,5 @@ UserRouter.delete("/deleteUser", user_M.deleteUser, (req, res) => {// Delete - �
         res.status(500).send({success: req.success})
     }
 })
+
+
