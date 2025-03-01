@@ -49,7 +49,8 @@ async function getAvg(req, res) {
 async function getcount(req, res) {
     const month = req.body.month;
     const year = req.body.year;
-
+    console.log(month);
+    console.log(year);
     try {
         const promisePool = db_pool.promise();
         const sqlQuery = `
