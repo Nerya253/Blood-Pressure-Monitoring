@@ -9,9 +9,8 @@ async function getUsers(req, res) {
             SELECT DISTINCT
                 users.id,
                 users.full_name
-            FROM
-                users
-                    JOIN
+            FROM users
+                JOIN
                 b_m ON users.id = b_m.user_id
             WHERE
                 YEAR(b_m.date) = ? AND MONTH(b_m.date) = ?;
@@ -47,7 +46,6 @@ async function getAvg(req, res) {
     }
 }
 
-
 async function getcount(req, res) {
     const month = req.body.month;
     const year = req.body.year;
@@ -56,8 +54,8 @@ async function getcount(req, res) {
         const promisePool = db_pool.promise();
         const sqlQuery = `
             SELECT
-                m.user_id,
-                COUNT(*) AS Exceptions
+                m.user_id AS userId,
+                COUNT(*) AS exceptions
             FROM
                 b_m AS m
                     JOIN (
@@ -66,20 +64,25 @@ async function getcount(req, res) {
                         AVG(low) AS avg_low,
                         AVG(high) AS avg_high,
                         AVG(pulse) AS avg_pulse
-                    FROM b_m
-                    WHERE YEAR(date) = 2025 AND MONTH(date) = 02
-                    GROUP BY user_id ) AS avg_values
-                         ON m.user_id = avg_values.user_id
-            WHERE YEAR(m.date) = 2025 AND MONTH(m.date) = 02
+                    FROM
+                        b_m
+                    WHERE
+                        YEAR(date) = ? AND MONTH(date) = ?
+                    GROUP BY
+                        user_id
+                ) AS avg_values ON m.user_id = avg_values.user_id
+            WHERE
+                YEAR(m.date) = ? AND MONTH(m.date) = ?
               AND (
-                (m.low < avg_values.avg_low * 0.8 OR m.low > avg_values.avg_low * 1.2) OR
-                (m.high < avg_values.avg_high * 0.8 OR m.high > avg_values.avg_high * 1.2) OR
-                (m.pulse < avg_values.avg_pulse * 0.8 OR m.pulse > avg_values.avg_pulse * 1.2)
+                m.low <= avg_values.avg_low * 0.8 OR m.low >= avg_values.avg_low * 1.2 OR
+                m.high <= avg_values.avg_high * 0.8 OR m.high >= avg_values.avg_high * 1.2 OR
+                m.pulse <= avg_values.avg_pulse * 0.8 OR m.pulse >= avg_values.avg_pulse * 1.2
                 )
             GROUP BY
                 m.user_id;
         `;
         const [rows] = await promisePool.query(sqlQuery, [year, month,year, month]);
+
         return res.json(rows);
     } catch (err) {
         console.error(err);
@@ -111,7 +114,7 @@ async function getYears(req, res) {
 
 async function getMonths(req, res) {
     const year = req.body.year;
-    console.log(year);
+
     try {
         const promisePool = db_pool.promise();
         const sqlQuery = 'SELECT DISTINCT MONTH(date) AS month FROM b_m WHERE YEAR(date) = ?';

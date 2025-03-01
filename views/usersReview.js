@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("yearSelect").addEventListener("change", async (event) => {
         const year = event.target.value;
         await fetchMonth(year);
-
         GetUsers();
         GetAvg();
         GetCount();
@@ -40,7 +39,7 @@ async function GetUsers() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ month: month, year: year }),
+            body: JSON.stringify({month: month, year: year}),
         });
 
         if (!response.ok) {
@@ -57,8 +56,6 @@ async function GetUsers() {
     }
 }
 
-
-
 async function GetAvg() {
     const month = document.getElementById("monthSelect").value;
     const year = document.getElementById("yearSelect").value;
@@ -70,7 +67,7 @@ async function GetAvg() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ month: month, year: year }),
+            body: JSON.stringify({month: month, year: year}),
         });
 
         if (!response.ok) {
@@ -87,8 +84,6 @@ async function GetAvg() {
     }
 }
 
-
-
 async function GetCount() {
     const month = document.getElementById("monthSelect").value;
     const year = document.getElementById("yearSelect").value;
@@ -100,7 +95,7 @@ async function GetCount() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ month: month, year: year }),
+            body: JSON.stringify({month: month, year: year}),
         });
 
         if (!response.ok) {
@@ -117,7 +112,6 @@ async function GetCount() {
     }
 }
 
-
 async function fetchYears() {
     try {
         const response = await fetch('http://localhost:3000/review/getYears');
@@ -132,8 +126,6 @@ async function fetchYears() {
     }
 }
 
-
-
 function YearSelect(years) {
     let s = "";
     years.forEach(year => {
@@ -141,13 +133,12 @@ function YearSelect(years) {
     });
     document.getElementById('yearSelect').innerHTML = s;
 
-    // אם יש שנה שנבחרה, תבצע את העדכון
     const initialYear = document.getElementById("yearSelect").value;
     if (initialYear) {
-        fetchMonth(initialYear);  // טוען את החודשים לפי השנה הנבחרת
-        GetUsers();  // טוען את המשתמשים
-        GetAvg();  // טוען את הממוצעים
-        GetCount();  // טוען את הספירות
+        fetchMonth(initialYear);
+        GetUsers();
+        GetAvg();
+        GetCount();
     }
 }
 
@@ -158,7 +149,7 @@ async function fetchMonth(year) {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ year: year })
+            body: JSON.stringify({year: year})
         });
 
         if (!response.ok) {
@@ -173,6 +164,16 @@ async function fetchMonth(year) {
 }
 
 function monthsSelect(months) {
+    for (let i = 0; i < months.length; i++) {
+        for (let j = 0; j < months.length - i - 1; j++) {
+            if (months[j] > months[j + 1]) {
+                let temp = months[j];
+                months[j] = months[j + 1];
+                months[j + 1] = temp;
+            }
+        }
+    }
+
     let s = "";
     months.forEach(month => {
         s += "<option value='" + month + "'>" + month + "</option>";
@@ -207,7 +208,7 @@ function CreateTableBody() {
         }
 
         for (let item of count) {
-            if (item.user_id == user.id) {
+            if (item.userId == user.id) {
                 cnt = item;
                 break;
             }
@@ -218,7 +219,7 @@ function CreateTableBody() {
             s += `<td>${Avg.avgLow}</td>`;
             s += `<td>${Avg.avgHigh}</td>`;
             s += `<td>${Avg.avgPulse}</td>`;
-            s += `<td>${cnt ? cnt.Exceptions : 0}</td>`;
+            s += `<td>${cnt ? cnt.exceptions : 0}</td>`;
             s += "</tr>";
         }
     });
