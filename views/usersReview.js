@@ -2,31 +2,38 @@ document.addEventListener("DOMContentLoaded", async () => {
     await fetchYears();
 
     document.getElementById("monthSelect").addEventListener("change", () => {
-        GetUsers();
-        GetAvg();
-        GetCount();
+        updateData();
     });
 
     document.getElementById("yearSelect").addEventListener("change", async (event) => {
         const year = event.target.value;
         await fetchMonth(year);
-        GetUsers();
-        GetAvg();
-        GetCount();
+        updateData();
     });
 
     const initialYear = document.getElementById("yearSelect").value;
     if (initialYear) {
         await fetchMonth(initialYear);
-        GetUsers();
-        GetAvg();
-        GetCount();
+        updateData();
     }
 });
 
 let all_users = null;
 let all_avg = null;
 let count = null;
+
+async function updateData() {
+    try {
+        await GetUsers();
+        await GetAvg();
+        await GetCount();
+
+        CreateTableHeader();
+        CreateTableBody();
+    } catch (error) {
+        console.error("Error updating data:", error);
+    }
+}
 
 async function GetUsers() {
     const month = document.getElementById("monthSelect").value;
@@ -48,11 +55,9 @@ async function GetUsers() {
 
         const reply = await response.json();
         all_users = reply.users || [];
-
-        CreateTableHeader();
-        CreateTableBody();
     } catch (error) {
         console.error("Error fetching users:", error);
+        all_users = [];
     }
 }
 
@@ -75,12 +80,10 @@ async function GetAvg() {
         }
 
         const reply = await response.json();
-        all_avg = reply;
-
-        CreateTableHeader();
-        CreateTableBody();
+        all_avg = reply || [];
     } catch (error) {
         console.error("Error fetching averages:", error);
+        all_avg = [];
     }
 }
 
@@ -103,12 +106,11 @@ async function GetCount() {
         }
 
         const reply = await response.json();
-        count = reply;
+        count = reply || [];
 
-        CreateTableHeader();
-        CreateTableBody();
     } catch (error) {
         console.error("Error fetching count:", error);
+        count = [];
     }
 }
 
@@ -120,9 +122,10 @@ async function fetchYears() {
         }
 
         const data = await response.json();
-        YearSelect(data.years);
+        YearSelect(data.years || []);
     } catch (error) {
         console.error('שגיאה בחיבור לשרת:', error);
+        YearSelect([]);
     }
 }
 
@@ -136,9 +139,6 @@ function YearSelect(years) {
     const initialYear = document.getElementById("yearSelect").value;
     if (initialYear) {
         fetchMonth(initialYear);
-        GetUsers();
-        GetAvg();
-        GetCount();
     }
 }
 
@@ -157,9 +157,10 @@ async function fetchMonth(year) {
         }
 
         const data = await response.json();
-        monthsSelect(data.months);
+        monthsSelect(data.months || []);
     } catch (error) {
         console.error('שגיאה בחיבור לשרת:', error);
+        monthsSelect([]);
     }
 }
 
@@ -196,23 +197,28 @@ function CreateTableHeader() {
 function CreateTableBody() {
     let s = "";
 
-    all_users.forEach(user => {
+    const usersArray = all_users || [];
+    const avgArray = all_avg || [];
+    const countArray = count || [];
+
+    usersArray.forEach(user => {
         let Avg = null;
         let cnt = null;
 
-        for (let avg of all_avg) {
-            if (avg.userId === user.id) {
+        for (let avg of avgArray) {
+            if (avg && avg.userId === user.id) {
                 Avg = avg;
                 break;
             }
         }
 
-        for (let item of count) {
-            if (item.userId == user.id) {
+        for (let item of countArray) {
+            if (item && item.userId == user.id) {
                 cnt = item;
                 break;
             }
         }
+
         if (Avg) {
             s += "<tr>";
             s += `<td>${user.full_name}</td>`;
@@ -223,5 +229,6 @@ function CreateTableBody() {
             s += "</tr>";
         }
     });
+
     document.getElementById("mainTableData").innerHTML = s;
 }

@@ -49,45 +49,66 @@ async function getAvg(req, res) {
 async function getcount(req, res) {
     const month = req.body.month;
     const year = req.body.year;
-    console.log(month);
-    console.log(year);
+
     try {
         const promisePool = db_pool.promise();
-        const sqlQuery = `
-            SELECT
-                m.user_id AS userId,
-                COUNT(*) AS exceptions
-            FROM
-                b_m AS m
-                    JOIN (
-                    SELECT
-                        user_id,
-                        AVG(low) AS avg_low,
-                        AVG(high) AS avg_high,
-                        AVG(pulse) AS avg_pulse
-                    FROM
-                        b_m
-                    WHERE
-                        YEAR(date) = ? AND MONTH(date) = ?
-                    GROUP BY
-                        user_id
-                ) AS avg_values ON m.user_id = avg_values.user_id
-            WHERE
-                YEAR(m.date) = ? AND MONTH(m.date) = ?
-              AND (
-                m.low <= avg_values.avg_low * 0.8 OR m.low >= avg_values.avg_low * 1.2 OR
-                m.high <= avg_values.avg_high * 0.8 OR m.high >= avg_values.avg_high * 1.2 OR
-                m.pulse <= avg_values.avg_pulse * 0.8 OR m.pulse >= avg_values.avg_pulse * 1.2
-                )
-            GROUP BY
-                m.user_id;
-        `;
-        const [rows] = await promisePool.query(sqlQuery, [year, month,year, month]);
 
-        return res.json(rows);
+        let sqlQuery = `
+            SELECT
+                user_id,
+                AVG(low) AS avg_low,
+                AVG(high) AS avg_high,
+                AVG(pulse) AS avg_pulse
+            FROM
+                b_m
+            WHERE
+                YEAR(date) = ? AND MONTH(date) = ?
+            GROUP BY
+                user_id
+        `;
+
+        const [avgResults] = await promisePool.query(sqlQuery, [year, month]);
+        console.log(avgResults)
+        if (avgResults.length === 0) {
+            return res.json([]);
+        }
+
+        const results = [];
+
+        for (const avgResult of avgResults) {
+            sqlQuery = `
+                SELECT
+                    COUNT(*) AS exceptions
+                FROM
+                    b_m
+                WHERE
+                    user_id = ? AND YEAR(date) = ? AND MONTH(date) = ?
+                    AND (
+                        low <= ? * 0.8 OR low >= ? * 1.2 OR
+                        high <= ? * 0.8 OR high >= ? * 1.2 OR
+                        pulse <= ? * 0.8 OR pulse >= ? * 1.2
+                    )
+            `;
+
+            const [countResults] = await promisePool.query(sqlQuery, [
+                avgResult.user_id, year, month,
+                avgResult.avg_low, avgResult.avg_low,
+                avgResult.avg_high, avgResult.avg_high,
+                avgResult.avg_pulse, avgResult.avg_pulse
+            ]);
+
+            if (countResults[0].exceptions > 0) {
+                results.push({
+                    userId: avgResult.user_id,
+                    exceptions: countResults[0].exceptions
+                });
+            }
+        }
+
+        return res.json(results);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ error: "Internal Server Error" });
+        return res.status(500).json([]);
     }
 }
 
