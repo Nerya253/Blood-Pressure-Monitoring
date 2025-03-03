@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 let all_users = null;
-let medidot = null;
+let measurements = null;
+let deviationIds = null
 
 async function usersSelect() {
     let url = "http://localhost:3000/Users/getUsers";
@@ -26,7 +27,6 @@ async function usersSelect() {
 
         let data = await response.json();
         all_users = data.users;
-        console.log(all_users);
         let s = "";
         for (let user of all_users) {
             s += `<option value="${user.id}">${user.full_name}</option>`;
@@ -68,7 +68,8 @@ async function getHistory() {
         }
 
         const data = await response.json();
-        medidot = data.medidot;
+        measurements = data.measurements;
+        deviationIds = data.deviationIds;
 
         CreateTableHeader();
         CreateTableBody();
@@ -88,24 +89,49 @@ function CreateTableHeader() {
     document.getElementById("mainHeader").innerHTML = s;
 }
 
+
 function CreateTableBody() {
     let s = "";
 
-    if (medidot && medidot.length > 0) {
-        for (let medida of medidot) {
-            const date = new Date(medida.date);
+    if (measurements && measurements.length > 0) {
+        for (let i = 0; i < measurements.length; i++) {
+
+            const measurement = measurements[i];
+
+            const date = new Date(measurement.date);
             const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 
-            s += "<tr>";
-            s += `<td>${formattedDate}</td>`;
-            s += `<td>${medida.low}</td>`;
-            s += `<td>${medida.high}</td>`;
-            s += `<td>${medida.pulse}</td>`;
-            s += "</tr>";
+            console.log(deviationIds);
+            let isDeviation = false;
+            if (deviationIds && deviationIds.length > 0) {
+                for (let j = 0; j < deviationIds.length; j++) {
+                    if (deviationIds[j] === measurement.id) {
+                        isDeviation = true;
+                        break;
+                    }
+                }
+            }
+
+            if (isDeviation) {
+                s += "<tr>";
+                s += `<td class="isBold">${formattedDate}</td>`;
+                s += `<td class="isBold">${measurement.low}</td>`;
+                s += `<td class="isBold">${measurement.high}</td>`;
+                s += `<td class="isBold">${measurement.pulse}</td>`;
+                s += "</tr>";
+            } else {
+                s += "<tr>";
+                s += `<td>${formattedDate}</td>`;
+                s += `<td>${measurement.low}</td>`;
+                s += `<td>${measurement.high}</td>`;
+                s += `<td>${measurement.pulse}</td>`;
+                s += "</tr>";
+            }
         }
     } else {
-        s += "<tr><td colspan='5'>אין נתונים להצגה</td></tr>";
+        s += "<tr><td colspan='4'>אין נתונים להצגה</td></tr>";
     }
 
     document.getElementById("mainTableData").innerHTML = s;
 }
+
