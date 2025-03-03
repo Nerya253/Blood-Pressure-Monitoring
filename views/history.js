@@ -81,10 +81,10 @@ async function getHistory() {
 function CreateTableHeader() {
     let s = "";
     s += "<tr>";
-    s += "<th>תאריך</th>";
-    s += "<th>סיטורציה נמוכה</th>";
-    s += "<th>סיטורציה גבוהה</th>";
-    s += "<th>דופק</th>";
+    s += "<th>Date</th>";
+    s += "<th>Diastolic</th>";
+    s += "<th>Systolic</th>";
+    s += "<th>Pulse</th>";
     s += "</tr>";
     document.getElementById("mainHeader").innerHTML = s;
 }
@@ -129,7 +129,7 @@ function CreateTableBody() {
             }
         }
     } else {
-        s += "<tr><td colspan='4'>אין נתונים להצגה</td></tr>";
+        s += "<tr><td colspan='4'>No data to display</td></tr>";
     }
 
     document.getElementById("mainTableData").innerHTML = s;

@@ -7,8 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-
-//הצגת רשימת המשתמשים
+// הצגת רשימת המשתמשים
 async function usersSelect() {
     let url = "http://localhost:3000/Users/getUsers";
     try {
@@ -38,9 +37,16 @@ async function usersSelect() {
     }
 }
 
+// הוספת משתמש חדש
+async function createUser(event) {
+    if (event) event.preventDefault();
 
-async function createUser() {
     const newUserName = document.getElementById("newUserName").value;
+
+    if (!newUserName) {
+        alert("Please enter a username");
+        return;
+    }
 
     let url = "http://localhost:3000/Users/createUser";
     try {
@@ -50,49 +56,66 @@ async function createUser() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({ newUserName: newUserName })
-
         });
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
-        }else {
+        } else {
             document.getElementById("newUserName").value = "";
+            alert("User successfully created");
+            usersSelect();
         }
     } catch (error) {
-        console.error("Error fetching users:", error);
+        console.error("Error creating user:", error);
+        alert("Error connecting to server");
     }
 }
 
+// מחיקת משתמש
+async function deleteUser(event) {
+    if (event) event.preventDefault();
 
+    document.getElementById("newName").value = "";
 
+    const userSelect = document.querySelector(".user-select");
+    const userId = userSelect.value;
+    const userName = userSelect.options[userSelect.selectedIndex].text;
 
+    const isConfirmed = confirm(`Are you sure you want to delete the user "${userName}"? This action cannot be undone.`);
 
-//מחיקת משתמש
-async function deleteUser() {
-    const userId = document.querySelector(".user-select").value;
+    if (isConfirmed) {
+        try {
+            const response = await fetch("http://localhost:3000/Users/deleteUser", {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ id: userId })
+            });
 
-    try {
-        const response = await fetch("http://localhost:3000/Users/deleteUser", {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ id: userId })
-        });
+            if (response.ok) {
+                alert("User successfully deleted");
 
-    } catch (error) {
-        console.error("Error deleting user:", error);
-        alert("שגיאה בחיבור לשרת");
+                await usersSelect();
+            } else {
+                throw new Error("Failed to delete user");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("Error deleting user");
+        }
     }
 }
 
+// עדכון משתמש
+async function updateUser(event) {
+    if (event) event.preventDefault();
 
-async function updateUser() {
     const userId = document.querySelector(".user-select").value;
-    const newName  = document.getElementById("newName").value;
+    const newName = document.getElementById("newName").value;
 
     if (!userId || !newName) {
-        alert("יש למלא את כל השדות!");
+        alert("Please fill in all fields!");
         return;
     }
 
@@ -106,28 +129,18 @@ async function updateUser() {
         });
 
         if (response.ok) {
-            alert("עודכן בהצלחה!");
+            alert("Updated successfully!");
+            document.getElementById("newName").value = "";
+
+            await usersSelect();
         } else {
             const errorText = await response.text();
-            console.error("שגיאה מהשרת:", errorText);
-            alert("שגיאה בהוספת המדדים.");
+            console.error("Server error:", errorText);
+            alert("Error updating user.");
         }
 
     } catch (error) {
         console.error("Error:", error);
-        alert("שגיאה בחיבור לשרת");
+        alert("Error connecting to server");
     }
 }
-
-
-
-document.getElementById("deleteButton").addEventListener("click", () => {
-    document.getElementById("newName").disabled = true;
-    document.getElementById("newName").value = "";
-});
-
-document.getElementById("updateButton").addEventListener("click", () => {
-    document.getElementById("newName").disabled = false;
-});
-
-

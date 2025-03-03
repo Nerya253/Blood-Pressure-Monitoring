@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>BPM - הוסף או מחק משתמש</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BPM - User Update</title>
     <link rel="stylesheet" href="css.css">
-
 </head>
 <body>
 <header>
@@ -17,37 +17,44 @@
     </div>
 </header>
 <nav>
-    <a href="/">סקירת משתמשים</a>
-    <a href="/page2">היסטוריית מדידות</a>
-    <a href="/page3">הזן מדידות</a>
-    <a href="/page4">עדכון משתמשים</a>
+    <a href="/">User Review</a>
+    <a href="/page2">Measurement History</a>
+    <a href="/page3">Enter Measurements</a>
+    <a href="/page4">User Update</a>
 </nav>
 <div class="container">
     <div class="card">
-        <h2>הוסף משתמש חדש</h2>
+        <h2>Add New User</h2>
         <form id="createUserForm">
             <div class="form-group">
-                <label for="newUserName">שם משתמש:</label>
-                <input type="text" id="newUserName" name="newUserName" placeholder="הכנס שם מלא" required>
+                <label for="newUserName">Username:</label>
+                <input type="text" id="newUserName" name="newUserName" placeholder="Enter full name" required>
             </div>
-            <button onclick="createUser()">הוסף משתמש</button>
+            <button type="button" onclick="createUser()">Add User</button>
         </form>
     </div>
     <div class="card">
-        <h2>עדכן או מחק משתמש קיים</h2>
-        <form id="deleteUserForm">
+        <h2>Update or Delete an Existing User</h2>
+        <form id="updateUserForm">
             <div class="form-group">
-                <label>בחר משתמש:</label>
-                <select class="user-select" name="id" required>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="newName">שם חדש לעדכון:</label>
-                <input type="text" id="newName" name="newName" placeholder="הכנס שם חדש" required>
-            </div>
-            <button type="submit" id="updateButton" onclick="updateUser()">עדכן משתמש</button>
-            <button type="submit" id="deleteButton" onclick="deleteUser()">מחק משתמש</button>
+                <div class="user-update-row">
+                    <div class="field-pair">
+                        <label>Select User:</label>
+                        <select class="user-select" name="id" required>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
 
+                    <div class="field-pair">
+                        <label for="newName">New Name for Update:</label>
+                        <input type="text" id="newName" name="newName" placeholder="Enter a new name" required>
+                    </div>
+                </div>
+            </div>
+            <div class="action-buttons" style="display: flex; gap: 20px;">
+                <button type="button" id="updateButton" onclick="updateUser()">Update User</button>
+                <button type="button" id="deleteButton" onclick="deleteUser()">Delete User</button>
+            </div>
         </form>
     </div>
 </div>

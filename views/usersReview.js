@@ -185,11 +185,11 @@ function monthsSelect(months) {
 function CreateTableHeader() {
     let s = "";
     s += "<tr>";
-    s += "<th>שם מלא</th>";
-    s += "<th>סטורציה נמוכה</th>";
-    s += "<th>סטורציה גבוהה</th>";
-    s += "<th>דופק</th>";
-    s += "<th>כמות מדידות חריגות</th>";
+    s += "<th>Full name</th>";
+    s += "<th>Diastolic</th>";
+    s += "<th>Systolic</th>";
+    s += "<th>Pulse</th>";
+    s += "<th>Abnormal measurements</th>";
     s += "</tr>";
     document.getElementById("mainHeader").innerHTML = s;
 }

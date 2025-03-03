@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="he">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BPM - סקירת משתמשים</title>
+    <title>BPM - User Review</title>
     <link rel="stylesheet" href="css.css">
 </head>
 <body>
@@ -17,22 +17,28 @@
     </div>
 </header>
 <nav>
-    <a href="/">סקירת משתמשים</a>
-    <a href="/page2">היסטוריית מדידות</a>
-    <a href="/page3">הזן מדידות</a>
-    <a href="/page4">עדכון משתמשים</a>
+    <a href="/">User Review</a>
+    <a href="/page2">Measurement History</a>
+    <a href="/page3">Enter Measurements</a>
+    <a href="/page4">User Update</a>
 </nav>
 <div class="container">
-    <h2>סקירת משתמשים - ממוצע מדידות חודשיות</h2>
+    <h2>User Review - Average Monthly Measurements</h2>
     <form>
-    <div class="filter">
-        <label for="yearSelect">בחר שנה:</label>
-        <select id="yearSelect">
-        </select>
-        <label for="monthSelect">בחר חודש:</label>
-        <select id="monthSelect">
-        </select>
-    </div>
+        <div class="filter">
+            <div class="filter-field">
+                <label for="yearSelect">Year:</label>
+                <select id="yearSelect">
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+            </div>
+            <div class="filter-field">
+                <label for="monthSelect">Month:</label>
+                <select id="monthSelect">
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+            </div>
+        </div>
     </form>
     <table>
         <thead id="mainHeader"></thead>
