@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-async function addMadadim() {
+async function addMeasurements() {
     const userId = document.querySelector(".user-select").value;
     const date = document.getElementById("date").value;
     const high = document.getElementById("high-saturation").value;
@@ -30,20 +30,20 @@ async function addMadadim() {
 
         if (response.ok) {
             const reply = await response.json();
-            console.log("מדדים נוספו בהצלחה:", reply);
+            console.log("Measurements added successfully:", reply);
             document.getElementById("date").value = "";
             document.getElementById("high-saturation").value = "";
             document.getElementById("low-saturation").value = "";
             document.getElementById("pulse").value = "";
-            alert("המדדים נוספו בהצלחה!");
+            alert("Measurements added successfully!");
         } else {
             const errorText = await response.text();
-            console.error("שגיאה מהשרת:", errorText);
-            alert("שגיאה בהוספת המדדים.");
+            console.error("Server error:", errorText);
+            alert("Error adding measurements.");
         }
     } catch (error) {
-        console.error("שגיאה בחיבור לשרת:", error);
-        alert("שגיאה בחיבור לשרת.");
+        console.error("Error connecting to server:", error);
+        alert("Error connecting to server.");
     }
 }
 

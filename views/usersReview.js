@@ -118,13 +118,13 @@ async function fetchYears() {
     try {
         const response = await fetch('http://localhost:3000/review/getYears');
         if (!response.ok) {
-            throw new Error('שגיאה בהבאת השנים');
+            throw new Error('Error retrieving years');
         }
 
         const data = await response.json();
         YearSelect(data.years || []);
     } catch (error) {
-        console.error('שגיאה בחיבור לשרת:', error);
+        console.error('Error connecting to server:', error);
         YearSelect([]);
     }
 }
@@ -153,13 +153,13 @@ async function fetchMonth(year) {
         });
 
         if (!response.ok) {
-            throw new Error('שגיאה בהבאת חודשים');
+            throw new Error('Error retrieving months');
         }
 
         const data = await response.json();
         monthsSelect(data.months || []);
     } catch (error) {
-        console.error('שגיאה בחיבור לשרת:', error);
+        console.error('Error connecting to server:', error);
         monthsSelect([]);
     }
 }

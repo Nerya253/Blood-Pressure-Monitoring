@@ -45,7 +45,7 @@ async function getHistory() {
     const endDate = document.getElementById("end-date").value;
 
     if (!userId || !startDate || !endDate) {
-        alert("נא למלא את כל השדות");
+        alert("Please fill in all fields");
         return;
     }
 
@@ -134,4 +134,3 @@ function CreateTableBody() {
 
     document.getElementById("mainTableData").innerHTML = s;
 }
-

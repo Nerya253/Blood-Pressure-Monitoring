@@ -5,7 +5,7 @@ module.exports = UserRouter;
 const user_M = require("../Middleware/user_M")
 
 
-UserRouter.post("/createUser", user_M.createUser,user_M.getUsers, (req, res) => {//Create - הוספה
+UserRouter.post("/createUser", user_M.createUser,user_M.getUsers, (req, res) => {//Create
     if (req.success) {
         res.status(200).json({success: req.success, insertId: req.insertId, users: req.users});
     } else {
@@ -13,14 +13,14 @@ UserRouter.post("/createUser", user_M.createUser,user_M.getUsers, (req, res) => 
     }
 })
 
-UserRouter.get("/getUsers", user_M.getUsers, (req, res) => {//Read - קבלת רשימה
+UserRouter.get("/getUsers", user_M.getUsers, (req, res) => {//Read
     if (req.success) {
         res.status(200).send({success: req.success, users: req.users})
     } else {
         res.status(500).send({success: req.success})
     }
 })
-UserRouter.post("/getUsers", user_M.getUsers, (req, res) => {//Read - קבלת רשימה
+UserRouter.post("/getUsers", user_M.getUsers, (req, res) => {//Read
     if (req.success) {
         res.status(200).send({success: req.success, users: req.users})
     } else {
@@ -28,7 +28,7 @@ UserRouter.post("/getUsers", user_M.getUsers, (req, res) => {//Read - קבלת �
     }
 })
 
-UserRouter.put("/updateUser", user_M.updateUser, (req, res) => {//Update - עריכה
+UserRouter.put("/updateUser", user_M.updateUser, (req, res) => {//Update
     if (req.success) {
         res.status(200).send({success: req.success})
     } else {
@@ -36,7 +36,7 @@ UserRouter.put("/updateUser", user_M.updateUser, (req, res) => {//Update - ער�
     }
 })
 
-UserRouter.delete("/deleteUser", user_M.deleteUser, (req, res) => {// Delete - מחיקה
+UserRouter.delete("/deleteUser", user_M.deleteUser, (req, res) => {// Delete
     if (req.success) {
         res.status(200).send({success: req.success})
     } else {

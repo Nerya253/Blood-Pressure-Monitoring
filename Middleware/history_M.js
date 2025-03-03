@@ -22,7 +22,7 @@ async function getHistory(req, res) {
         }
 
         sqlQuery = `
-            SELECT 
+            SELECT
                 AVG(high) AS avg_high,
                 AVG(low) AS avg_low,
                 AVG(pulse) AS avg_pulse

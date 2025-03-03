@@ -10,8 +10,8 @@ async function getUsers(req, res) {
                 users.id,
                 users.full_name
             FROM users
-                JOIN
-                b_m ON users.id = b_m.user_id
+                     JOIN
+                 b_m ON users.id = b_m.user_id
             WHERE
                 YEAR(b_m.date) = ? AND MONTH(b_m.date) = ?;
         `;
@@ -83,10 +83,10 @@ async function getcount(req, res) {
                     b_m
                 WHERE
                     user_id = ? AND YEAR(date) = ? AND MONTH(date) = ?
-                    AND (
-                        low <= ? * 0.8 OR low >= ? * 1.2 OR
-                        high <= ? * 0.8 OR high >= ? * 1.2 OR
-                        pulse <= ? * 0.8 OR pulse >= ? * 1.2
+                  AND (
+                    low <= ? * 0.8 OR low >= ? * 1.2 OR
+                    high <= ? * 0.8 OR high >= ? * 1.2 OR
+                    pulse <= ? * 0.8 OR pulse >= ? * 1.2
                     )
             `;
 

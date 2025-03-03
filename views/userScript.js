@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// הצגת רשימת המשתמשים
+// Display list of users
 async function usersSelect() {
     let url = "http://localhost:3000/Users/getUsers";
     try {
@@ -37,7 +37,7 @@ async function usersSelect() {
     }
 }
 
-// הוספת משתמש חדש
+// Add new user
 async function createUser(event) {
     if (event) event.preventDefault();
 
@@ -71,7 +71,7 @@ async function createUser(event) {
     }
 }
 
-// מחיקת משתמש
+// Delete user
 async function deleteUser(event) {
     if (event) event.preventDefault();
 
@@ -107,7 +107,7 @@ async function deleteUser(event) {
     }
 }
 
-// עדכון משתמש
+// Update user
 async function updateUser(event) {
     if (event) event.preventDefault();
 
