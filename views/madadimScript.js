@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-async function addMeasurements() {
+async function addMadadim() {
     const userId = document.querySelector(".user-select").value;
     const date = document.getElementById("date").value;
     const high = document.getElementById("high-saturation").value;

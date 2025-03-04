@@ -12,14 +12,13 @@ const swaggerAutogen = require('swagger-autogen')();
 const doc = {
     info: {
         title: 'My API',
-        description: 'תוכנת משימות מעולה'
+        description: 'BPM'
     },
     host: `localhost:${port}`
 };
 
 const swaggerOutputFile = './swagger-output.json';
 const routes = ['./app.js'];
-
 
 swaggerAutogen(swaggerOutputFile, routes, doc);
 

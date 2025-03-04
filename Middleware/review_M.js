@@ -68,7 +68,7 @@ async function getcount(req, res) {
         `;
 
         const [avgResults] = await promisePool.query(sqlQuery, [year, month]);
-        console.log(avgResults)
+
         if (avgResults.length === 0) {
             return res.json([]);
         }
@@ -130,7 +130,7 @@ async function getYears(req, res) {
     }catch (error) {
         console.error(error);
         res.response = false;
-        res.status(500).send('שגיאה בהבאת השנים');
+        res.status(500).send('Error getting years');
     }
 }
 
@@ -152,7 +152,7 @@ async function getMonths(req, res) {
     } catch (error) {
         console.error(error);
         res.response = false;
-        res.status(500).send('שגיאה בהבאת החודשים');
+        res.status(500).send('Error getting months');
     }
 }
 

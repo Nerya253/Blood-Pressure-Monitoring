@@ -41,7 +41,6 @@
                     <div class="field-pair">
                         <label>Select User:</label>
                         <select class="user-select" name="id" required>
-                            <!-- Options will be populated by JavaScript -->
                         </select>
                     </div>
 
@@ -51,9 +50,9 @@
                     </div>
                 </div>
             </div>
-            <div class="action-buttons" style="display: flex; gap: 20px;">
+            <div class="action-buttons" id="uniqueStyle">
                 <button type="button" id="updateButton" onclick="updateUser()">Update User</button>
-                <button type="button" id="deleteButton" onclick="deleteUser()">Delete User</button>
+                <button type="button" class="deleteButton" onclick="deleteUser()">Delete User</button>
             </div>
         </form>
     </div>

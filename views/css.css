@@ -299,7 +299,7 @@ table tr:hover td {
 }
 
 /* Button base styles */
-button, #deleteButton {
+button, .deleteButton {
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 0.5rem;
@@ -333,13 +333,13 @@ button:active {
 }
 
 /* Delete button styles */
-#deleteButton {
+.deleteButton {
     background: linear-gradient(45deg, #ca1f3e, #d32f8c);
     color: white;
     box-shadow: 0 4px 15px rgba(202, 31, 62, 0.3);
 }
 
-#deleteButton:hover {
+.deleteButton:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(202, 31, 62, 0.4);
     background: linear-gradient(45deg, #d32f8c, #ca1f3e);
@@ -435,13 +435,13 @@ select option:hover {
 }
 
 .isBold {
-    background-color: #99adb4;
-    color: #ffffff;
+    background-color: #d88282;
+    color: rgb(255, 255, 255);
     font-weight: bold;
 }
 
 table tr:hover td.isBold {
-    background-color: #7f97a1 !important;
+    background-color: rgba(214, 159, 159, 0.59) !important;
     color: #ffffff !important;
 }
 
@@ -612,4 +612,9 @@ table tr:hover td.isBold {
         flex-direction: column;
         gap: 15px;
     }
+}
+
+#uniqueStyle{
+    display: flex;
+    gap: 20px;
 }
