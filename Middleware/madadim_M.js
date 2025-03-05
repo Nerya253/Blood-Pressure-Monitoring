@@ -52,16 +52,16 @@ async function createMadadim(req, res, next) {
         }
         const isNumber = (value) => /^\d+$/.test(String(value));
         if (!low || !isNumber(low) || parseInt(low) < 40 || parseInt(low) > 120) {
-            throw new Error("ערך דיאסטולי חייב להיות בין 40 ל-120");
+            throw new Error("Diastolic value must be between 40 and 120");
         }
-        if (!high || !isNumber(high) || high < 80 || high > 220) {
-            throw new Error("ערך סיסטולי חייב להיות בין 80 ל-220");
+        if (!high || !isNumber(high) || parseInt(high)  < 80 || parseInt(high)  > 220) {
+            throw new Error("Systolic value must be between 80 and 220");
         }
-        if (high <= low) {
-            throw new Error("ערך סיסטולי חייב להיות גדול מערך דיאסטולי");
+        if (parseInt(high) <= parseInt(low)) {
+            throw new Error("Systolic value must be greater than diastolic value");
         }
-        if (!pulse || !isNumber(pulse) || parseInt(pulse) < 40 || parseInt(pulse) > 220) {
-            throw new Error("דופק חייב להיות בין 40 ל-220");
+        if (!pulse || !isNumber(pulse) || parseInt(pulse)  < 40 || parseInt(pulse) > 220) {
+            throw new Error("Pulse must be between 40 and 220");
         }
 
         const promisePool = db_pool.promise();

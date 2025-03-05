@@ -96,9 +96,9 @@ async function updateMadad(id) {
             newHigh = prompt("Enter new systolic value:", measurement.high);
             if (newHigh === null) return; // User clicked Cancel
 
-            if (!isNumber(newHigh) || newHigh < 80 || newHigh > 220) {
+            if (!isNumber(newHigh) || parseInt(newHigh) < 80 || parseInt(newHigh) > 220) {
                 alert("Systolic value must be a number between 80 and 220");
-            } else if (parseInt(newHigh) <= parseInt(newLow)) {
+            } else if (newHigh <= newLow) {
                 alert("Systolic value must be greater than diastolic value");
             } else {
                 isHighValid = true;

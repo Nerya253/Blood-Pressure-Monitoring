@@ -69,11 +69,11 @@ async function addMadadim() {
         alert("Diastolic value must be between 40 and 120");
         return;
     }
-    if (!high || !isNumber(high) || high < 80 || high > 220) {
+    if (!high || !isNumber(high) || parseInt(high) < 80 || parseInt(high)  > 220) {
         alert("Systolic value must be between 80 and 220");
         return;
     }
-    if (high <= low) {
+    if (parseInt(high) <= parseInt(low)) {
         alert("Systolic value must be greater than diastolic value");
         return;
     }
