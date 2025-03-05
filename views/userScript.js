@@ -48,6 +48,11 @@ async function createUser(event) {
         return;
     }
 
+    if (newUserName.trim() === "") {
+        alert("Please enter a name");
+        return;
+    }
+
     let url = "http://localhost:3000/Users/createUser";
     try {
         const response = await fetch(url, {
