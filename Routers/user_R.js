@@ -3,6 +3,7 @@ const UserRouter = express.Router();
 
 module.exports = UserRouter;
 const user_M = require("../Middleware/user_M")
+const db_pool = require("../database");
 
 
 UserRouter.post("/createUser", user_M.createUser,user_M.getUsers, (req, res) => {//Create
@@ -43,5 +44,7 @@ UserRouter.delete("/deleteUser", user_M.deleteUser, (req, res) => {// Delete
         res.status(500).send({success: req.success})
     }
 })
+
+UserRouter.post("/checkUser", user_M.checkUser);
 
 

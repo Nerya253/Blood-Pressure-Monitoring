@@ -43,32 +43,53 @@ async function createUser(event) {
 
     const newUserName = document.getElementById("newUserName").value;
 
-    if (!newUserName) {
-        alert("Please enter a username");
-        return;
-    }
-
-    if (newUserName.trim() === "") {
-        alert("Please enter a name");
-        return;
-    }
-
-    let url = "http://localhost:3000/Users/createUser";
     try {
+        if (!newUserName) {
+            alert("Please enter a username");
+            return;
+        }
+
+        if (newUserName.trim() === "") {
+            alert("Please enter a name");
+            return;
+        }
+        const isLettersOnly = (value) => /^[a-zA-Z\u0590-\u05FF\s]+$/.test(String(value));
+        if (!isLettersOnly(newUserName)) {
+            alert("Username can only contain letters");
+            return;
+        }
+
+        const checkUrl = "http://localhost:3000/Users/checkUser";
+        const checkResponse = await fetch(checkUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({userName: newUserName})
+        });
+
+        const checkData = await checkResponse.json();
+
+        if (checkData.exists) {
+            alert("A user with this name already exists");
+            return;
+        }
+
+        let url = "http://localhost:3000/Users/createUser";
         const response = await fetch(url, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ newUserName: newUserName })
+            body: JSON.stringify({newUserName: newUserName})
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        } else {
+        if (response.ok) {
             document.getElementById("newUserName").value = "";
             alert("User successfully created");
             usersSelect();
+        } else {
+            alert("Error creating user");
         }
     } catch (error) {
         console.error("Error creating user:", error);
@@ -95,12 +116,11 @@ async function deleteUser(event) {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ id: userId })
+                body: JSON.stringify({id: userId})
             });
 
             if (response.ok) {
                 alert("User successfully deleted");
-
                 await usersSelect();
             } else {
                 throw new Error("Failed to delete user");
@@ -119,18 +139,40 @@ async function updateUser(event) {
     const userId = document.querySelector(".user-select").value;
     const newName = document.getElementById("newName").value;
 
-    if (!userId || !newName) {
-        alert("Please fill in all fields!");
-        return;
-    }
 
     try {
+        if (!userId || !newName) {
+            alert("Please fill in all fields!");
+            return;
+        }
+        const isLettersOnly = (value) => /^[a-zA-Z\u0590-\u05FF\s]+$/.test(String(value));
+        if (!isLettersOnly(newName)) {
+            alert("Username can only contain letters");
+            return;
+        }
+
+        const checkUrl = "http://localhost:3000/Users/checkUser";
+        const checkResponse = await fetch(checkUrl, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({userName: newName})
+        });
+
+        const checkData = await checkResponse.json();
+
+        if (checkData.exists) {
+            alert("A user with this name already exists");
+            return;
+        }
+
         const response = await fetch("http://localhost:3000/Users/updateUser", {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ id: userId, newName: newName })
+            body: JSON.stringify({id: userId, newName: newName})
         });
 
         if (response.ok) {

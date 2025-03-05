@@ -122,9 +122,7 @@ async function updateMadadim(req, res, next) {
         if (rows.affectedRows === 0) {
             throw new Error("ID not found");
         }
-        if (rows.affectedRows === 1 && rows.changedRows === 0) {
-            throw new Error("No change, data is equal to previous");
-        }
+
         req.success = true;
     } catch (err) {
         req.success = false;
