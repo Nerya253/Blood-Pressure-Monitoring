@@ -49,7 +49,7 @@ async function deleteMadad(id) {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ id: id })
+                body: JSON.stringify({id: id})
             });
 
             if (response.ok) {
@@ -68,21 +68,56 @@ async function deleteMadad(id) {
 // Update measurement
 async function updateMadad(id) {
     const measurement = measurements.find(m => m.id === id);
-    if (!measurement) {
-        alert("Cannot find the measurement");
-        return;
-    }
-    
-    const newLow = prompt("Enter new diastolic value:", measurement.low);
-    if (!newLow) return;
-
-    const newHigh = prompt("Enter new systolic value:", measurement.high);
-    if (!newHigh) return;
-
-    const newPulse = prompt("Enter new pulse value:", measurement.pulse);
-    if (!newPulse) return;
 
     try {
+        if (!measurement) {
+            alert("The measurement cannot be found");
+            return;
+        }
+
+        const isNumber = (value) => /^\d+$/.test(String(value));
+
+        let newLow;
+        let isLowValid = false;
+        while (!isLowValid) {
+            newLow = prompt("Enter new diastolic value:", measurement.low);
+            if (newLow === null) return; // User clicked Cancel
+
+            if (isNumber(newLow) && parseInt(newLow) >= 40 && parseInt(newLow) <= 120) {
+                isLowValid = true;
+            } else {
+                alert("Diastolic value must be a number between 40 and 120");
+            }
+        }
+
+        let newHigh;
+        let isHighValid = false;
+        while (!isHighValid) {
+            newHigh = prompt("Enter new systolic value:", measurement.high);
+            if (newHigh === null) return; // User clicked Cancel
+
+            if (!isNumber(newHigh) || newHigh < 80 || newHigh > 220) {
+                alert("Systolic value must be a number between 80 and 220");
+            } else if (parseInt(newHigh) <= parseInt(newLow)) {
+                alert("Systolic value must be greater than diastolic value");
+            } else {
+                isHighValid = true;
+            }
+        }
+
+        let newPulse;
+        let isPulseValid = false;
+        while (!isPulseValid) {
+            newPulse = prompt("Enter new pulse value:", measurement.pulse);
+            if (newPulse === null) return; // User clicked Cancel
+
+            if (isNumber(newPulse) && parseInt(newPulse) >= 40 && parseInt(newPulse) <= 220) {
+                isPulseValid = true;
+            } else {
+                alert("Pulse must be a number between 40 and 220");
+            }
+        }
+
         const response = await fetch("http://localhost:3000/madadim/updateMadadim", {
             method: "PUT",
             headers: {

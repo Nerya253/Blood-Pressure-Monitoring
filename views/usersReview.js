@@ -165,15 +165,7 @@ async function fetchMonth(year) {
 }
 
 function monthsSelect(months) {
-    for (let i = 0; i < months.length; i++) {
-        for (let j = 0; j < months.length - i - 1; j++) {
-            if (months[j] > months[j + 1]) {
-                let temp = months[j];
-                months[j] = months[j + 1];
-                months[j + 1] = temp;
-            }
-        }
-    }
+    months.sort((a, b) => a - b);
 
     let s = "";
     months.forEach(month => {

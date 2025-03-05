@@ -4,6 +4,11 @@ async function getUsers(req, res) {
     const month = req.body.month;
     const year = req.body.year;
     try {
+        const isNumber = (value) => /^\d+$/.test(String(value));
+        if (!month || !year || !isNumber(month) || !isNumber(year)) {
+            throw new Error("Month and year must be valid numbers");
+        }
+
         const promisePool = db_pool.promise();
         const sqlQuery = `
             SELECT DISTINCT
@@ -28,6 +33,19 @@ async function getAvg(req, res) {
     const year = req.body.year;
 
     try {
+        const isNumber = (value) => /^\d+$/.test(String(value));
+        if (!month || !year || !isNumber(month) || !isNumber(year)) {
+            throw new Error("Month and year must be valid numbers");
+        }
+
+        if (month < 1 || month > 12) {
+            throw new Error("Month must be between 1 and 12");
+        }
+
+        if (year < 2000 || year > new Date().getFullYear()) {
+            throw new Error("Year must be valid from 2000 to the current time");
+        }
+
         const promisePool = db_pool.promise();
         const sqlQuery = `
             SELECT user_id AS userId,
@@ -42,7 +60,7 @@ async function getAvg(req, res) {
         return res.json(rows);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ error: "Internal Server Error" });
+        return res.status(500).json({ error: err.message || "Internal Server Error" });
     }
 }
 
@@ -51,6 +69,19 @@ async function getcount(req, res) {
     const year = req.body.year;
 
     try {
+        const isNumber = (value) => /^\d+$/.test(String(value));
+        if (!month || !year || !isNumber(month) || !isNumber(year)) {
+            throw new Error("Month and year must be valid numbers");
+        }
+
+        if (month < 1 || month > 12) {
+            throw new Error("Month must be between 1 and 12");
+        }
+
+        if (year < 2000 || year > new Date().getFullYear()) {
+            throw new Error("Year must be in a valid range");
+        }
+
         const promisePool = db_pool.promise();
 
         let sqlQuery = `

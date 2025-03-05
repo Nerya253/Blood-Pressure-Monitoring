@@ -50,9 +50,8 @@ async function updateUser(req, res, next) {
     const newName = req.body.newName;
 
     try {
-        if (!id || !newName) {throw new Error("Please fill in all details.")}
-        if (id.trim() === '' || newName.trim() === '') {
-            throw new Error("Data cannot be empty");
+        if (!id || !newName || id.trim() === '' || newName.trim() === '') {
+            throw new Error("Please fill in all details.");
         }
         const isNumber = (value) => /^\d+$/.test(String(value));
         if (!isNumber(id)) {
@@ -90,7 +89,7 @@ async function deleteUser(req, res, next) {
             throw new Error("Missing required parameter");
         }
         if (id.trim() === '') {
-            throw new Error("Data cannot be empty");
+            throw new Error("ID cannot be empty");
         }
         const isNumber = (value) => /^\d+$/.test(String(value));
         if (!isNumber(id)) {
@@ -99,20 +98,25 @@ async function deleteUser(req, res, next) {
 
         const promisePool = db_pool.promise();
 
+        const checkUserQuery = `SELECT id FROM users WHERE id = ?`;
+        const [userExists] = await promisePool.query(checkUserQuery, [id]);
+
+        if (userExists.length === 0) {
+            throw new Error("User not found");
+        }
+
         const sqlDeleteFromBM = `DELETE FROM b_m WHERE user_id = ?`;
         await promisePool.query(sqlDeleteFromBM, [id]);
 
         const sqlDeleteUser = `DELETE FROM users WHERE id = ?`;
         const [rows] = await promisePool.query(sqlDeleteUser, [id]);
-        if (rows.affectedRows === 0){
-            throw new Error("ID not found")
-        }
+
         req.success = true;
     } catch (err) {
         req.success = false;
-        console.log(err);
+        console.error(err);
+        req.errorMessage = err.message;
     }
-
     next();
 }
 

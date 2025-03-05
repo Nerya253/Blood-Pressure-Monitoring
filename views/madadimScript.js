@@ -61,19 +61,24 @@ async function addMadadim() {
         return;
     }
     if (!validateDate(date)) {
+        alert("Please enter a valid date");
         return;
     }
     const isNumber = (value) => /^\d+$/.test(String(value));
-    if (!low || !isNumber(low) || parseInt(low) <= 0) {
-        alert("Please enter a valid diastolic value");
+    if (!low || !isNumber(low) || parseInt(low) < 40 || parseInt(low) > 120) {
+        alert("Diastolic value must be between 40 and 120");
         return;
     }
-    if (!high || !isNumber(high) || parseInt(high) <= 0) {
-        alert("Please enter a valid systolic value");
+    if (!high || !isNumber(high) || high < 80 || high > 220) {
+        alert("Systolic value must be between 80 and 220");
         return;
     }
-    if (!pulse || !isNumber(pulse) || parseInt(pulse) <= 0) {
-        alert("Please enter a valid pulse value");
+    if (high <= low) {
+        alert("Systolic value must be greater than diastolic value");
+        return;
+    }
+    if (!pulse || !isNumber(pulse) || parseInt(pulse) < 40 || parseInt(pulse) > 220) {
+        alert("Pulse must be between 40 and 220");
         return;
     }
 

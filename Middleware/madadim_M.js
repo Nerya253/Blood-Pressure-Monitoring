@@ -4,7 +4,7 @@ const db_pool = require("../database");
 function validateDate(dateStr) {
     const datePattern = /^\d{4}-\d{2}-\d{2}$/;
     if (!datePattern.test(dateStr)) {
-        return { valid: false, message: "Please enter a valid date format (YYYY-MM-DD)" };
+        return {valid: false, message: "Please enter a valid date format (YYYY-MM-DD)"};
     }
 
     const date = new Date(dateStr);
@@ -13,11 +13,11 @@ function validateDate(dateStr) {
     const day = String(date.getDate()).padStart(2, '0');
 
     if (`${year}-${month}-${day}` !== dateStr) {
-        return { valid: false, message: "Invalid date entered" };
+        return {valid: false, message: "Invalid date entered"};
     }
 
     if (year < 2000) {
-        return { valid: false, message: "Date cannot be earlier than year 2000" };
+        return {valid: false, message: "Date cannot be earlier than year 2000"};
     }
 
     const dateFormatted = `${year}-${month}-${day}`;
@@ -29,10 +29,10 @@ function validateDate(dateStr) {
     const todayFormatted = `${todayYear}-${todayMonth}-${todayDay}`;
 
     if (dateFormatted > todayFormatted) {
-        return { valid: false, message: "Date cannot be in the future" };
+        return {valid: false, message: "Date cannot be in the future"};
     }
 
-    return { valid: true };
+    return {valid: true};
 }
 
 async function createMadadim(req, res, next) {
@@ -47,18 +47,21 @@ async function createMadadim(req, res, next) {
             throw new Error("Missing required parameter");
         }
         const dateValidation = validateDate(date);
-        if (!dateValidation.valid){
+        if (!dateValidation.valid) {
             throw new Error(dateValidation.message);
         }
         const isNumber = (value) => /^\d+$/.test(String(value));
-        if (!low || !isNumber(low) || parseInt(low) <= 0) {
-            throw new Error("Please enter a valid diastolic value");
+        if (!low || !isNumber(low) || parseInt(low) < 40 || parseInt(low) > 120) {
+            throw new Error("ערך דיאסטולי חייב להיות בין 40 ל-120");
         }
-        if (!high || !isNumber(high) || parseInt(high) <= 0) {
-            throw new Error("Please enter a valid systolic value");
+        if (!high || !isNumber(high) || high < 80 || high > 220) {
+            throw new Error("ערך סיסטולי חייב להיות בין 80 ל-220");
         }
-        if (!pulse || !isNumber(pulse) || parseInt(pulse) <= 0) {
-            throw new Error("Please enter a valid pulse value");
+        if (high <= low) {
+            throw new Error("ערך סיסטולי חייב להיות גדול מערך דיאסטולי");
+        }
+        if (!pulse || !isNumber(pulse) || parseInt(pulse) < 40 || parseInt(pulse) > 220) {
+            throw new Error("דופק חייב להיות בין 40 ל-220");
         }
 
         const promisePool = db_pool.promise();
@@ -76,7 +79,8 @@ async function createMadadim(req, res, next) {
 }
 
 async function getMadadim(req, res, next) {
-    const sqlQuery = `SELECT * FROM b_m`;
+    const sqlQuery = `SELECT *
+                      FROM b_m`;
     let rows = [];
 
     try {
@@ -108,13 +112,17 @@ async function updateMadadim(req, res, next) {
         }
 
         const promisePool = db_pool.promise();
-        const sqlQuery = `UPDATE b_m SET high = ?, low = ?, pulse = ? WHERE id = ?`;
+        const sqlQuery = `UPDATE b_m
+                          SET high  = ?,
+                              low   = ?,
+                              pulse = ?
+                          WHERE id = ?`;
         const [rows] = await promisePool.query(sqlQuery, [high, low, pulse, madad_id]);
 
-        if (rows.affectedRows === 0){
+        if (rows.affectedRows === 0) {
             throw new Error("ID not found");
         }
-        if (rows.affectedRows === 1 && rows.changedRows === 0){
+        if (rows.affectedRows === 1 && rows.changedRows === 0) {
             throw new Error("No change, data is equal to previous");
         }
         req.success = true;
@@ -142,9 +150,11 @@ async function deleteMadadim(req, res, next) {
         }
 
         const promisePool = db_pool.promise();
-        const sqlQuery = `DELETE FROM b_m WHERE id = ?`;
+        const sqlQuery = `DELETE
+                          FROM b_m
+                          WHERE id = ?`;
         [rows] = await promisePool.query(sqlQuery, [madad_id]);
-        if (rows.affectedRows === 0){
+        if (rows.affectedRows === 0) {
             throw new Error("ID not found");
         }
         req.success = true;
