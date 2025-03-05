@@ -9,7 +9,7 @@ async function createUser(req, res, next) {
         if (newUserName.trim() === '') {
             throw new Error("Data cannot be empty");
         }
-        const isLettersOnly = (value) => /^[a-zA-Z\u0590-\u05FF]+$/.test(String(value));
+        const isLettersOnly = (value) => /^[a-zA-Z\u0590-\u05FF\s]+$/.test(String(value));
         if (!isLettersOnly(newUserName)) {
             throw new Error("Username can only contain letters");
         }
@@ -58,17 +58,15 @@ async function updateUser(req, res, next) {
         if (!isNumber(id)) {
             throw new Error("ID can only contain numbers");
         }
-        const isLettersOnly = (value) => /^[a-zA-Z\u0590-\u05FF]+$/.test(String(value));
+        const isLettersOnly = (value) => /^[a-zA-Z\u0590-\u05FF\s]+$/.test(String(value));
         if (!isLettersOnly(newName)) {
             throw new Error("Username can only contain letters");
         }
 
-        if (!newName || newName.trim().length === 0) {throw new Error("Please enter a name")}
-        let sqlQuery = `UPDATE users `
-        sqlQuery += `SET full_name = '${newName}' `
-        sqlQuery += `WHERE id = ${id}`;
         const promisePool = db_pool.promise();
-        let[rows] = await promisePool.query(sqlQuery);
+        if (!newName || newName.trim().length === 0) {throw new Error("Please enter a name")}
+        const sqlQuery = `UPDATE users SET full_name = ? WHERE id = ?`;
+        const [rows] = await promisePool.query(sqlQuery, [newName, id]);
 
         if (rows.affectedRows === 0){
             throw new Error("ID not found");

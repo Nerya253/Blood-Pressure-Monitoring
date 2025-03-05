@@ -72,7 +72,7 @@ async function updateMadad(id) {
         alert("Cannot find the measurement");
         return;
     }
-
+    
     const newLow = prompt("Enter new diastolic value:", measurement.low);
     if (!newLow) return;
 
@@ -171,16 +171,7 @@ function CreateTableBody() {
             const date = new Date(measurement.date);
             const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
 
-            console.log(deviationIds);
-            let isDeviation = false;
-            if (deviationIds && deviationIds.length > 0) {
-                for (let j = 0; j < deviationIds.length; j++) {
-                    if (deviationIds[j] === measurement.id) {
-                        isDeviation = true;
-                        break;
-                    }
-                }
-            }
+            const isDeviation = deviationIds?.includes(measurement.id) || false;
 
             if (isDeviation) {
                 s += "<tr>";

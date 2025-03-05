@@ -126,7 +126,6 @@ async function getYears(req, res) {
 
 
         res.json({ years });
-        res.response = true;
     }catch (error) {
         console.error(error);
         res.response = false;
@@ -148,7 +147,6 @@ async function getMonths(req, res) {
         });
 
         res.json({ months });
-        res.response = true;
     } catch (error) {
         console.error(error);
         res.response = false;
