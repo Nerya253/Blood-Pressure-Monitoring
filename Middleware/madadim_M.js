@@ -46,25 +46,36 @@ async function createMadadim(req, res, next) {
         if (!user_id || !date || !high || !low || !pulse) {
             throw new Error("Missing required parameter");
         }
+
+        const promisePool = db_pool.promise();
+        const userCheckQuery = "SELECT COUNT(*) as count FROM users WHERE id = ?";
+        const [userExists] = await promisePool.query(userCheckQuery, [user_id]);
+
+        if (userExists[0].count === 0) {
+            throw new Error("User ID does not exist");
+        }
+
         const dateValidation = validateDate(date);
         if (!dateValidation.valid) {
             throw new Error(dateValidation.message);
         }
         const isNumber = (value) => /^\d+$/.test(String(value));
-        if (!low || !isNumber(low) || parseInt(low) < 40 || parseInt(low) > 120) {
+        if (!isNumber(user_id) || !isNumber(high) || !isNumber(low) || !isNumber(pulse)) {
+            throw new Error("All data must be numbers");
+        }
+        if (parseInt(low) < 40 || parseInt(low) > 120) {
             throw new Error("Diastolic value must be between 40 and 120");
         }
-        if (!high || !isNumber(high) || parseInt(high)  < 80 || parseInt(high)  > 220) {
+        if (parseInt(high)  < 80 || parseInt(high)  > 220) {
             throw new Error("Systolic value must be between 80 and 220");
         }
         if (parseInt(high) <= parseInt(low)) {
             throw new Error("Systolic value must be greater than diastolic value");
         }
-        if (!pulse || !isNumber(pulse) || parseInt(pulse)  < 40 || parseInt(pulse) > 220) {
+        if (parseInt(pulse)  < 40 || parseInt(pulse) > 220) {
             throw new Error("Pulse must be between 40 and 220");
         }
 
-        const promisePool = db_pool.promise();
         const sqlQuery = `INSERT INTO b_m (user_id, date, high, low, pulse)
                           VALUES (?, ?, ?, ?, ?)`;
         const [result] = await promisePool.query(sqlQuery, [user_id, date, high, low, pulse]);
@@ -74,10 +85,10 @@ async function createMadadim(req, res, next) {
     } catch (error) {
         console.error("Error in createMadadim:", error);
         req.success = false;
+        req.error = error.message;
     }
     next();
 }
-
 async function getMadadim(req, res, next) {
     const sqlQuery = `SELECT *
                       FROM b_m`;
@@ -110,6 +121,23 @@ async function updateMadadim(req, res, next) {
         if (!isNumber(madad_id) || !isNumber(high) || !isNumber(low) || !isNumber(pulse)) {
             throw new Error("All data must be numbers");
         }
+        if (parseInt(low) < 40 || parseInt(low) > 120) {
+            throw new Error("Diastolic value must be between 40 and 120");
+            return;
+        }
+        if (parseInt(high) < 80 || parseInt(high)  > 220) {
+            throw new Error("Systolic value must be between 80 and 220");
+            return;
+        }
+        if (parseInt(high) <= parseInt(low)) {
+            throw new Error("Systolic value must be greater than diastolic value");
+            return;
+        }
+        if (parseInt(pulse) < 40 || parseInt(pulse) > 220) {
+            alert("Pulse must be between 40 and 220");
+            return;
+        }
+
 
         const promisePool = db_pool.promise();
         const sqlQuery = `UPDATE b_m

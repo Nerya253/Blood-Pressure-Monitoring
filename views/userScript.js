@@ -145,6 +145,10 @@ async function updateUser(event) {
             alert("Please fill in all fields!");
             return;
         }
+        if (newName.trim() === "") {
+            alert("Please enter a name");
+            return;
+        }
         const isLettersOnly = (value) => /^[a-zA-Z\u0590-\u05FF\s]+$/.test(String(value));
         if (!isLettersOnly(newName)) {
             alert("Username can only contain letters");
